@@ -2,6 +2,7 @@
     "name": "on-screen-keyboard",
     "description": "An on-screen keyboard",
     "author": "James Hopkins",
+    "private": true,
     "dependencies": {
         "grunt": "0.x.x",
         "grunt-contrib-clean": "0.5.x",
@@ -9,10 +10,13 @@
         "grunt-contrib-jshint": "0.6.x",
         "grunt-contrib-uglify": "0.2.x",
         "grunt-contrib-watch": "0.5.x",
-        "npm": "1.4.21",
+        "mocha": "1.21.4",
+        "chai": "1.9.1",
+        "grunt-testem": "0.5.x",
+        "npm": "1.4.21"
     },
     "engine": "node >= 0.10",
     "scripts": {
-      "build": "npm install && grunt"
+        "build": "npm install && grunt"
     }
 }
