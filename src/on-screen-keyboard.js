@@ -17,8 +17,9 @@ var onScreenKeyboard = (function() {
     Keyboard.prototype.buildRow = function(row) {
 
         var rowBuffer = document.createDocumentFragment();
+
         row.forEach(function(key) {
-            var key = new Key(key);
+            key = new Key(key);
             rowBuffer.appendChild(key.render());
         });
         //console.log(rowBuffer);
