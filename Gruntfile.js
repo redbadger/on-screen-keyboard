@@ -64,7 +64,7 @@ module.exports = function(grunt) {
     grunt.registerTask(
         "build",
         "Compiles all of the assets and copies the files to the build directory.",
-        [ "clean", "jshint", "copy", "uglify", "testem" ]
+        [ "testem", "jshint", "clean", "copy", "uglify" ]
     );
 
     grunt.registerTask(
