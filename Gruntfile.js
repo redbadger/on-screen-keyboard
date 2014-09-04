@@ -5,16 +5,16 @@ module.exports = function(grunt) {
 
         copy: {
             build: {
-                cwd: 'src',
-                src: [ '**' ],
-                dest: 'dist',
+                cwd: "src",
+                src: [ "**" ],
+                dest: "dist",
                 expand: true
             },
         },
 
         clean: {
             build: {
-                src: [ 'dist' ]
+                src: [ "dist" ]
             },
         },
 
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
 
-    grunt.loadNpmTasks('grunt-testem');
+    grunt.loadNpmTasks("grunt-testem");
 
     grunt.registerTask(
         "build",
