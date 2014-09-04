@@ -10,11 +10,11 @@ describe("Keyboard", function() {
 
     it("include a keyboard layout template", function() {
 
-        var testContainer = document.createElement('div');
+        var testContainer = document.createElement("div");
         testContainer.setAttribute("id", "test");
         document.body.appendChild(testContainer);
 
-        //var keyboard = new onScreenKeyboard.Keyboard(['']);
+        var keyboard = new onScreenKeyboard.Keyboard([["a", "b"], ["c", "d"]]);
         //keyboard.render('test');
 
         // Remove component from DOM here.
