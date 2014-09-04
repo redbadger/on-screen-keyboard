@@ -1,7 +1,8 @@
 {
     "framework": "mocha",
     "src_files": [
+        "node_modules/sinon-browser-only/sinon.js",
         "node_modules/chai/chai.js",
-        "test/hello.js"
+        "test/*_spec.js"
     ]
 }
