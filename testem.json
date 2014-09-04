@@ -3,6 +3,7 @@
     "src_files": [
         "node_modules/sinon-browser-only/sinon.js",
         "node_modules/chai/chai.js",
+        "src/on-screen-keyboard.js",
         "test/*_spec.js"
     ]
 }
