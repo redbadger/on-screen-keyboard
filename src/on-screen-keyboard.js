@@ -7,15 +7,14 @@ var onScreenKeyboard = (function() {
 
         this.keys = keys;
 
-        // Make sure that the keyboard includes at least one key.
+        // Make sure the keyboard includes at least one key.
         if (typeof this.keys === "undefined" || this.keys.length === 0) {
             throw new Error("The keyboard needs to have at least one key");
         }
 
+        // Make sure the aforementioned keys are all strings.
         this.keys.forEach(function(key) {
-            if (typeof key !== "string") {
-                throw new Error("At least one of the keys provided isn't a string");
-            }
+            new Key(key);
         });
 
     };
@@ -29,8 +28,10 @@ var onScreenKeyboard = (function() {
 
     };
 
-    var Key = function() {
-        //console.log("This works really well!");
+    var Key = function(key) {
+        if (typeof key !== "string") {
+            throw new Error("The key provided isn't a string");
+        }
     };
 
     function get_area(w, h) {
@@ -38,7 +39,8 @@ var onScreenKeyboard = (function() {
     }
 
     return {
-        Keyboard: Keyboard
+        Keyboard: Keyboard,
+        Key: Key
     };
 
 }());

@@ -33,7 +33,7 @@ describe("Keyboard", function() {
 
     });
 
-    it("throw error if every key element isn't a string", function() {
+    /*it("throw error if every key element isn't a string", function() {
 
         assert.throw(function() {
             new onScreenKeyboard.Keyboard([
@@ -41,7 +41,7 @@ describe("Keyboard", function() {
             ]);
         }, "At least one of the keys provided isn't a string");
 
-    });
+    });*/
 
     it("include a keyboard layout template", function() {
 
@@ -53,6 +53,18 @@ describe("Keyboard", function() {
         //keyboard.render('test');
 
         // Remove component from DOM here.
+
+    });
+
+});
+
+describe("Keys", function() {
+
+    it("throw error if key element isn't a string", function() {
+
+        assert.throw(function() {
+            new onScreenKeyboard.Key([2]);
+        }, "The key provided isn't a string");
 
     });
 
