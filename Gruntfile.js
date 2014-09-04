@@ -40,11 +40,11 @@ module.exports = function(grunt) {
         testem: {
             all: {
               src: [
-                'test/testem.json'
+                  "testem.json"
               ],
             },
             options: {
-                launch_in_ci : ['firefox']
+                launch_in_ci : ["firefox"]
             }
         }
 
