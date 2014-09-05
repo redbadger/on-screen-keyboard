@@ -1,6 +1,6 @@
 describe("Keyboard", function() {
 
-    it("throw error if no keys are provided as an argument of the Keyboard constructor", function() {
+    it("throws an error if no keys are provided as an argument of the Keyboard constructor", function() {
 
         assert.throw(function() {
             new onScreenKeyboard.Keyboard([]);
@@ -8,14 +8,14 @@ describe("Keyboard", function() {
 
     });
 
-    it("include a keyboard layout template", function() {
+    it("includes a keyboard layout template", function() {
 
         var testContainer = document.createElement("div");
         testContainer.setAttribute("id", "test");
         document.body.appendChild(testContainer);
 
         var keyboard = new onScreenKeyboard.Keyboard([["a", "b"], ["c", "d"]]);
-        //keyboard.render('test');
+        keyboard.render('test');
 
         // Remove component from DOM here.
 

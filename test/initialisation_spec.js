@@ -13,11 +13,11 @@ describe("Initialization", function() {
         keyboard = new onScreenKeyboard.Keyboard([['key']]);
     });
 
-    it("reside in a variable within the global namespace called onScreenKeyboard", function () {
+    it("resides in a variable within the global namespace called onScreenKeyboard", function () {
         assert.property(window, "onScreenKeyboard");
     });
 
-    it("instantiate a global with members defined by the onScreenKeyboard.Keyboard constructor", function () {
+    it("instantiates a global with members defined by the onScreenKeyboard.Keyboard constructor", function () {
         assert.instanceOf(keyboard, onScreenKeyboard.Keyboard);
     });
 

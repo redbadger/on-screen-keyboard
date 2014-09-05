@@ -1,8 +1,5 @@
 var onScreenKeyboard = (function() {
 
-    var foo = 0,
-        keyboard;
-
     var Keyboard = function(keyRows) {
 
         this.keyRows = keyRows;
@@ -16,14 +13,15 @@ var onScreenKeyboard = (function() {
 
     Keyboard.prototype.buildRow = function(row) {
 
-        var rowBuffer = document.createDocumentFragment();
+        var DOMElement = document.createElement("div");
+        DOMElement.setAttribute("class", "row");
 
         row.forEach(function(key) {
             key = new Key(key);
-            rowBuffer.appendChild(key.render());
+            DOMElement.appendChild(key.render());
         });
-        //console.log(rowBuffer);
-        return rowBuffer;
+
+        return DOMElement;
 
     };
 
@@ -31,14 +29,18 @@ var onScreenKeyboard = (function() {
 
         this.buffer = document.createDocumentFragment();
 
-        // Make sure the aforementioned keys are all strings.
         this.keyRows.forEach(function(row) {
-            this.buildRow(row);
+            row = this.buildRow(row);
+            this.buffer.appendChild(row);
         }.bind(this));
 
-        // Inject the keyboard into the DOM.
         var keyboardUI = document.createElement("div");
         keyboardUI.setAttribute("id", "keyboard");
+
+        // Put all keys into a fragment to prevent superfluous DOM reflows.
+        keyboardUI.appendChild(this.buffer);
+
+        // Inject the keyboard into the DOM.
         document.getElementById(wrapperElement).appendChild(keyboardUI);
 
     };
@@ -48,30 +50,29 @@ var onScreenKeyboard = (function() {
         if (typeof key[0] !== "string") {
             throw new Error("The key provided isn't a string");
         }
+
         this.key = key[0];
         this.render();
 
     };
 
-    Key.prototype._onClick = function() {};
+    Key.prototype._onClick = function() {
+        console.log(this.key);
+    };
 
     Key.prototype.render = function() {
 
         // Construct the OOM element.
         var DOMElement = document.createElement("div");
         DOMElement.innerHTML = this.key;
-        DOMElement.setAttribute("id", this.key);
+        DOMElement.setAttribute("id", "key-" + this.key);
 
-        // Add the event listener.
-        DOMElement.addEventListener("click", this._onClick, false);
+        // Add a click event listener.
+        DOMElement.addEventListener("click", this._onClick.bind(this), false);
 
         return DOMElement;
 
     };
-
-    function get_area(w, h) {
-        return w * h;
-    }
 
     return {
         Keyboard: Keyboard,

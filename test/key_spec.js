@@ -1,6 +1,6 @@
 describe("Keys", function() {
 
-    it("throw error if key element isn't a string", function() {
+    it("throws error if key element isn't a string", function() {
 
         assert.throw(function() {
             new onScreenKeyboard.Key([[2]]);
@@ -8,22 +8,42 @@ describe("Keys", function() {
 
     });
 
-    it("expose the key string from the Key constructor's argument as a public variable", function() {
+    it("exposes the key string from the Key constructor's argument as a public variable", function() {
 
         var key = new onScreenKeyboard.Key("test");
         assert.property(key, "key");
 
     });
 
-    it("invoke a DOM node event listener upon a click event", function() {
+    describe("Render", function() {
 
-        var clickEvent = new Event("click");
-        var key = new onScreenKeyboard.Key("test");
+        it("creates a DOM node", function() {
 
-        sinon.spy(key, "_onClick");
-        key.render().dispatchEvent(clickEvent);
+            var key = new onScreenKeyboard.Key("test");
 
-        assert.isTrue(key._onClick.calledOnce);
+            assert.instanceOf(key.render(), HTMLElement);
+
+        });
+
+        it("adds an HTML ID attribute where the value is the key name prepended with 'key-'", function() {
+
+            //var key = new onScreenKeyboard.Key("test");
+
+            //console.log(key.render().querySelector("[id='t']"));
+
+        });
+
+        it("invokes the appropriate click event listener", function() {
+
+            var key = new onScreenKeyboard.Key("test");
+            var clickEvent = new Event("click");
+
+            sinon.spy(key, "_onClick");
+            key.render().dispatchEvent(clickEvent);
+
+            assert.isTrue(key._onClick.calledOnce);
+
+        });
 
     });
 
