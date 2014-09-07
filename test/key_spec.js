@@ -45,6 +45,20 @@ describe("Keys", function() {
 
         });
 
+        it("builds a new input value that reflects the key invoked", function() {
+
+            var inputField = document.createElement("input");
+            onScreenKeyboard._setCurrentInputNode(inputField);
+
+            onScreenKeyboard._getCurrentInputNode().addEventListener("key-pressed", function(e) {
+                assert.equal(e.detail, "test");
+            });
+            var key = new onScreenKeyboard.Key("test");
+            // We're manually invoking the 'click' event handler'
+            key._onClick();
+
+        });
+
     });
 
 });

@@ -14,7 +14,7 @@ var onScreenKeyboard = (function() {
         var setCurrentInputNode = function(e) {
             currentInputNode = e.target;
             currentInputNode.addEventListener("key-pressed", function(e) {
-                console.log(e);
+                //e.target.value = e.target.value + "Hello!";
             });
         };
 
@@ -74,6 +74,20 @@ var onScreenKeyboard = (function() {
 
     };
 
+    Key.prototype._buildInputValue = function() {
+
+        var inputValue;
+
+        if (typeof this.text === "object") {
+            console.log(this);
+        } else {
+            inputValue = currentInputNode.value + this.key;
+        }
+
+        return inputValue;
+
+    };
+
     Key.prototype._onClick = function() {
 
         // We need to check the existence of currentInputNode, since we're
@@ -84,7 +98,7 @@ var onScreenKeyboard = (function() {
             var keyPressEvent = new CustomEvent("key-pressed", {
                 // Publish the .val() of currentInputNode here, so the value can
                 // be parsed straight through on the eventListener.
-                detail: this.key
+                detail: this._buildInputValue()
             });
             currentInputNode.dispatchEvent(keyPressEvent);
 
@@ -114,8 +128,13 @@ var onScreenKeyboard = (function() {
     return {
         Keyboard: Keyboard,
         Key: Key,
-        getCurrentInputNode: function() {
+        // This getter/setter pair shouldn't be called explicitly, but are used
+        // for unit testing.
+        _getCurrentInputNode: function() {
             return currentInputNode;
+        },
+        _setCurrentInputNode: function(value) {
+            currentInputNode = value;
         }
     };
 
