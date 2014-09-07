@@ -1,5 +1,7 @@
 var onScreenKeyboard = (function() {
 
+    var currentInputNode;
+
     var Keyboard = function(keyRows) {
 
         this.keyRows = keyRows;
@@ -7,6 +9,18 @@ var onScreenKeyboard = (function() {
         // Make sure the keyboard includes at least one key.
         if (typeof this.keyRows === "undefined" || this.keyRows.length === 0) {
             throw new Error("The keyboard needs to have at least one key");
+        }
+
+        var setCurrentInputNode = function(e) {
+            currentInputNode = e.target;
+            currentInputNode.addEventListener("key-pressed", function(e) {
+                console.log(e);
+            });
+        };
+
+        var inputNodes = document.querySelectorAll('input.on-screen-keyboard');
+        for(var x=0; x<inputNodes.length; x++) {
+            inputNodes[x].addEventListener("focus", setCurrentInputNode, true);
         }
 
     };
@@ -41,23 +55,40 @@ var onScreenKeyboard = (function() {
         keyboardUI.appendChild(this.buffer);
 
         // Inject the keyboard into the DOM.
-        document.getElementById(wrapperElement).appendChild(keyboardUI);
+        document.body.appendChild(keyboardUI);
+
+        return keyboardUI;
 
     };
 
     var Key = function(key) {
 
-        if (typeof key[0] !== "string") {
-            throw new Error("The key provided isn't a string");
+        if (typeof key !== "string") {
+            throw new Error("The key provided isn't a string nor an object");
         }
 
-        this.key = key[0];
+        this.key = key;
+
         this.render();
 
     };
 
     Key.prototype._onClick = function() {
-        console.log(this.key);
+
+        // We need to check the existence of currentInputNode, since we're
+        // testing Key instances in isolation (in our unit tests) - i.e outside
+        // of Keyboard instances.
+        if (currentInputNode) {
+
+            var keyPressEvent = new CustomEvent("key-pressed", {
+                // Publish the .val() of currentInputNode here, so the value can
+                // be parsed straight through on the eventListener.
+                detail: this.key
+            });
+            currentInputNode.dispatchEvent(keyPressEvent);
+
+        }
+
     };
 
     Key.prototype.render = function() {
@@ -76,7 +107,10 @@ var onScreenKeyboard = (function() {
 
     return {
         Keyboard: Keyboard,
-        Key: Key
+        Key: Key,
+        currentInputNode: function() {
+            return currentInputNode;
+        }
     };
 
 }());

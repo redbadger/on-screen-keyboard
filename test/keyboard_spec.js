@@ -8,16 +8,22 @@ describe("Keyboard", function() {
 
     });
 
-    it("includes a keyboard layout template", function() {
+    it("the currently focused INPUT element is stored as a reference in onScreenKeyboard.currentInputNode", function() {
 
-        var testContainer = document.createElement("div");
-        testContainer.setAttribute("id", "test");
-        document.body.appendChild(testContainer);
+        var inputField = document.createElement('input');
+        inputField.setAttribute("class", "on-screen-keyboard");
+        document.body.appendChild(inputField);
 
-        var keyboard = new onScreenKeyboard.Keyboard([["a", "b"], ["c", "d"]]);
-        keyboard.render('test');
+        var keyboard = new onScreenKeyboard.Keyboard([["test"]]);
+        var renderedKeyboard = keyboard.render();
 
-        // Remove component from DOM here.
+        var focusEvent = new Event("focus");
+        inputField.dispatchEvent(focusEvent);
+
+        assert.strictEqual(onScreenKeyboard.currentInputNode(), inputField);
+
+        document.body.removeChild(inputField);
+        document.body.removeChild(renderedKeyboard);
 
     });
 
