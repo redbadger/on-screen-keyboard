@@ -4,7 +4,7 @@ describe("Keys", function() {
 
         assert.throw(function() {
             new onScreenKeyboard.Key([2]);
-        }, "The key provided isn't a string nor an object");
+        }, "The key provided is not a string nor an object");
 
     });
 

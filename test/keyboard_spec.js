@@ -20,7 +20,7 @@ describe("Keyboard", function() {
         var focusEvent = new Event("focus");
         inputField.dispatchEvent(focusEvent);
 
-        assert.strictEqual(onScreenKeyboard.currentInputNode(), inputField);
+        assert.strictEqual(onScreenKeyboard.getCurrentInputNode(), inputField);
 
         document.body.removeChild(inputField);
         document.body.removeChild(renderedKeyboard);

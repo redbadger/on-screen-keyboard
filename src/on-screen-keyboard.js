@@ -63,8 +63,9 @@ var onScreenKeyboard = (function() {
 
     var Key = function(key) {
 
-        if (typeof key !== "string") {
-            throw new Error("The key provided isn't a string nor an object");
+        // Only allow keys that are either a string or whose class is object.
+        if (typeof key !== "string" && Object.prototype.toString.call(key) !== "[object Object]") {
+            throw new Error("The key provided is not a string nor an object");
         }
 
         this.key = key;
@@ -93,10 +94,15 @@ var onScreenKeyboard = (function() {
 
     Key.prototype.render = function() {
 
+        var text = this.key;
+
         // Construct the OOM element.
         var DOMElement = document.createElement("div");
-        DOMElement.innerHTML = this.key;
-        DOMElement.setAttribute("id", "key-" + this.key);
+        if (typeof text === "object") {
+            text = this.key.text;
+        }
+        DOMElement.innerHTML = text;
+        DOMElement.setAttribute("id", "key-" + text);
 
         // Add a click event listener.
         DOMElement.addEventListener("click", this._onClick.bind(this), false);
@@ -108,7 +114,7 @@ var onScreenKeyboard = (function() {
     return {
         Keyboard: Keyboard,
         Key: Key,
-        currentInputNode: function() {
+        getCurrentInputNode: function() {
             return currentInputNode;
         }
     };
