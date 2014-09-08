@@ -1,12 +1,14 @@
 var onScreenKeyboard = (function() {
 
-    // currentInputNode is only defined upon
+    // Store a reference to the INPUT element that has received focus - and
+    // can therefore accept text input.
     var currentInputNode;
 
-    var findInputFields = function() {
-        return document.querySelectorAll('input.on-screen-keyboard');
-    };
-
+    /**
+     * Creates a keyboard instance
+     *
+     * @constructor
+     */
     var Keyboard = function(keyRows) {
 
         this.keyRows = keyRows;
@@ -94,13 +96,25 @@ var onScreenKeyboard = (function() {
 
         this.key = key;
 
+        // Since a new function reference is created after .bind() is called,
+        // we need to cache this reference (acting as the 'click' event handler)
+        // so we can refer to it when adding/removing event listeners.
+        this._onClick = this._onClick.bind(this);
+
+        // Keep a reference to the rendered DOM node in the constructor.
         this.el = this.render();
 
     };
 
+    /**
+     * Remove all associations of the key from the DOM.
+     *
+     * Currently, this only includes removing attached event listeners since
+     * Backbone removes the actual elements out of the DOM.
+     */
     Key.prototype.remove = function() {
 
-        this.el.removeEventListener("click", this._onClick, true);
+        this.el.removeEventListener("click", this._onClick);
 
     };
 
@@ -162,7 +176,7 @@ var onScreenKeyboard = (function() {
         DOMElement.setAttribute("id", "key-" + text);
 
         // Add a click event listener.
-        DOMElement.addEventListener("click", this._onClick.bind(this), false);
+        DOMElement.addEventListener("click", this._onClick);
 
         return DOMElement;
 
