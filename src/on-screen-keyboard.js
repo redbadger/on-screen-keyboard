@@ -51,7 +51,7 @@ var onScreenKeyboard = (function() {
         for (var x=0; x<this.inputNodes.length; x++) {
             this.inputNodes[x].removeEventListener("focus", this.setCurrentInputNode, true);
         }
-        for (var x=0; x<this.keys.length; x++) {
+        for (var y=0; y<this.keys.length; y++) {
             this.keys[x]._remove();
         }
     };
