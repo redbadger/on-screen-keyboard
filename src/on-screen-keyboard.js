@@ -1,13 +1,16 @@
 var onScreenKeyboard = (function() {
 
+    "use strict";
+
     // Store a reference to the INPUT element that has received focus - and
     // can therefore accept text input.
     var currentInputNode;
 
     /**
-     * Creates a keyboard instance
+     * Creates a keyboard instance.
      *
      * @constructor
+     * @param {Array} keyRows - An array of arrays that contain individual keys.
      */
     var Keyboard = function(keyRows) {
 
@@ -18,6 +21,8 @@ var onScreenKeyboard = (function() {
             throw new Error("The keyboard needs to have at least one key");
         }
 
+        // Set a reference to the focused DOM INPUT node, and add an event
+        // listener that receives the updated .value value.
         this.setCurrentInputNode = function(e) {
             currentInputNode = e.target;
             currentInputNode.addEventListener("key-pressed", function(e) {
@@ -31,20 +36,32 @@ var onScreenKeyboard = (function() {
             this.inputNodes[x].addEventListener("focus", this.setCurrentInputNode, true);
         }
 
+        // Store a reference to the keys within the keyboard, so that we can
+        // call methods on those instances after initialisation - i.e .remove()
         this.keys = [];
 
     };
 
+    /**
+     * Manages the removal of all associations of the keyboard from the DOM,
+     * including individual associations.
+     */
     Keyboard.prototype.remove = function() {
         // Remove event listeners on the applicable INPUT elements.
         for (var x=0; x<this.inputNodes.length; x++) {
             this.inputNodes[x].removeEventListener("focus", this.setCurrentInputNode, true);
         }
         for (var x=0; x<this.keys.length; x++) {
-            this.keys[x].remove();
+            this.keys[x]._remove();
         }
     };
 
+    /**
+     * Build (render) a row of keys within the keyboard. Responsible for
+     * instantiating Key instances.
+     *
+     * @param {Array} row - An array of keys.
+     */
     Keyboard.prototype.buildRow = function(row) {
 
         var DOMElement = document.createElement("div");
@@ -62,6 +79,9 @@ var onScreenKeyboard = (function() {
 
     };
 
+    /**
+     * Render the fully constructed keyboard.
+     */
     Keyboard.prototype.render = function(wrapperElement) {
 
         this.buffer = document.createDocumentFragment();
@@ -86,10 +106,26 @@ var onScreenKeyboard = (function() {
 
     /**
      * Key values can either be a string literal, or have a class of 'object'.
+     *
+     * If key is a string, then it's assumed that upon pressing the rendered
+     * key, it's value is appended to the current value of the INPUT element.
+     *
+     * If the key is an object, then it must be structured as follows:
+     *
+     * {
+     *     action: [action_type],
+     *     text: [text]
+     * }
+     *
+     * action_type: Must be 'delete'.
+     * text: The text to display in the rendered key.
+     *
+     * @constructor
+     * @param {(object|string)} key - The unprocessed key data.
      */
     var Key = function(key) {
 
-        // Only allow keys that are either a string or whose class is object.
+        // Only allow keys that are either a string or who have an object class.
         if (typeof key !== "string" && Object.prototype.toString.call(key) !== "[object Object]") {
             throw new Error("The key provided is not a string nor an object");
         }
@@ -112,7 +148,7 @@ var onScreenKeyboard = (function() {
      * Currently, this only includes removing attached event listeners since
      * Backbone removes the actual elements out of the DOM.
      */
-    Key.prototype.remove = function() {
+    Key.prototype._remove = function() {
 
         this.el.removeEventListener("click", this._onClick);
 
@@ -120,6 +156,8 @@ var onScreenKeyboard = (function() {
 
     /**
      * Computes the new value of the inputField
+     *
+     * @returns {String}
      */
     Key.prototype._buildInputValue = function() {
 
@@ -145,6 +183,11 @@ var onScreenKeyboard = (function() {
 
     };
 
+    /**
+     * An event handler that is invoked upon the 'click' event.
+     *
+     * @listens click
+     */
     Key.prototype._onClick = function() {
 
         // We need to check the existence of currentInputNode, since we're
@@ -152,6 +195,8 @@ var onScreenKeyboard = (function() {
         // of Keyboard instances.
         if (currentInputNode) {
 
+            // Establish a CustomEvent instance, passing the computed input
+            // value to the event's subscribers.
             var keyPressEvent = new CustomEvent("key-pressed", {
                 // Publish the .val() of currentInputNode here, so the value can
                 // be parsed straight through on the eventListener.
