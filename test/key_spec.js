@@ -50,12 +50,36 @@ describe("Keys", function() {
             var inputField = document.createElement("input");
             onScreenKeyboard._setCurrentInputNode(inputField);
 
-            onScreenKeyboard._getCurrentInputNode().addEventListener("key-pressed", function(e) {
-                assert.equal(e.detail, "test");
+            var defaultValue = "test";
+
+            var tests = [
+                {
+                    key: "a",
+                    expected: "testa"
+                },
+                {
+                    key: {
+                        action: "delete",
+                        text: "backspace"
+                    },
+                    expected: "tes"
+                }
+            ];
+
+            tests.forEach(function(test, index) {
+
+                inputField.value = defaultValue;
+
+                var assertTest = function(e) {
+                    assert.equal(e.detail, test.expected);
+                    onScreenKeyboard._getCurrentInputNode().removeEventListener("key-pressed", assertTest);
+                };
+
+                onScreenKeyboard._getCurrentInputNode().addEventListener("key-pressed", assertTest);
+                var key = new onScreenKeyboard.Key(test.key);
+                key._onClick();
+
             });
-            var key = new onScreenKeyboard.Key("test");
-            // We're manually invoking the 'click' event handler'
-            key._onClick();
 
         });
 

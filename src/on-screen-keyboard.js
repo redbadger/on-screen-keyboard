@@ -14,7 +14,7 @@ var onScreenKeyboard = (function() {
         var setCurrentInputNode = function(e) {
             currentInputNode = e.target;
             currentInputNode.addEventListener("key-pressed", function(e) {
-                //e.target.value = e.target.value + "Hello!";
+                e.target.value = e.detail;
             });
         };
 
@@ -74,17 +74,25 @@ var onScreenKeyboard = (function() {
 
     };
 
+    /**
+     * Computes the new value of the inputField
+     */
     Key.prototype._buildInputValue = function() {
 
-        var inputValue;
+        var newInputValue,
+            currentInputValue = currentInputNode.value;
 
-        if (typeof this.text === "object") {
-            console.log(this);
+        if (typeof this.key === "object") {
+            switch(this.key.action) {
+                case "delete":
+                    newInputValue = currentInputValue.substr(0, currentInputValue.length - 1);
+                    break;
+            }
         } else {
-            inputValue = currentInputNode.value + this.key;
+            newInputValue = currentInputValue + this.key;
         }
 
-        return inputValue;
+        return newInputValue;
 
     };
 
