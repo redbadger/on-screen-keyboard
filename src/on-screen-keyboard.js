@@ -21,25 +21,27 @@ var onScreenKeyboard = (function() {
             throw new Error("The keyboard needs to have at least one key");
         }
 
-        // Set a reference to the focused DOM INPUT node, and add an event
-        // listener that receives the updated .value value.
-        this.setCurrentInputNode = function(e) {
-            currentInputNode = e.target;
-            currentInputNode.addEventListener("key-pressed", function(e) {
-                e.target.value = e.detail;
-            });
-        };
-
         // Apply 'focus' event listeners upon keyboard initialization.
         this.inputNodes = document.querySelectorAll('input.on-screen-keyboard');
         for(var x=0; x<this.inputNodes.length; x++) {
-            this.inputNodes[x].addEventListener("focus", this.setCurrentInputNode, true);
+            this.inputNodes[x].addEventListener("focus", this._setCurrentInputNode, true);
         }
 
         // Store a reference to the keys within the keyboard, so that we can
         // call methods on those instances after initialisation - i.e .remove()
         this.keys = [];
 
+    };
+
+    /**
+     * Set a reference to the focused DOM INPUT node, and add an event listener
+     * that receives the updated value value.
+     */
+    Keyboard.prototype._setCurrentInputNode = function(e) {
+        currentInputNode = e.target;
+        currentInputNode.addEventListener("key-pressed", function(e) {
+            e.target.value = e.detail;
+        });
     };
 
     /**
