@@ -45,13 +45,14 @@ describe("Keys", function() {
 
         });
 
-        it("builds a new input value that reflects the key invoked", function() {
+        it("builds a new input field value that reflects the current invoked key", function() {
 
             var inputField = document.createElement("input");
             onScreenKeyboard._setCurrentInputNode(inputField);
 
             var defaultValue = "test";
 
+            // Individual key tests
             var tests = [
                 {
                     key: "a",

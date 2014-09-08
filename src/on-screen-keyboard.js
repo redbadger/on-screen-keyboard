@@ -1,6 +1,11 @@
 var onScreenKeyboard = (function() {
 
+    // currentInputNode is only defined upon
     var currentInputNode;
+
+    var findInputFields = function() {
+        return document.querySelectorAll('input.on-screen-keyboard');
+    };
 
     var Keyboard = function(keyRows) {
 
@@ -11,18 +16,31 @@ var onScreenKeyboard = (function() {
             throw new Error("The keyboard needs to have at least one key");
         }
 
-        var setCurrentInputNode = function(e) {
+        this.setCurrentInputNode = function(e) {
             currentInputNode = e.target;
             currentInputNode.addEventListener("key-pressed", function(e) {
                 e.target.value = e.detail;
             });
         };
 
-        var inputNodes = document.querySelectorAll('input.on-screen-keyboard');
-        for(var x=0; x<inputNodes.length; x++) {
-            inputNodes[x].addEventListener("focus", setCurrentInputNode, true);
+        // Apply 'focus' event listeners upon keyboard initialization.
+        this.inputNodes = document.querySelectorAll('input.on-screen-keyboard');
+        for(var x=0; x<this.inputNodes.length; x++) {
+            this.inputNodes[x].addEventListener("focus", this.setCurrentInputNode, true);
         }
 
+        this.keys = [];
+
+    };
+
+    Keyboard.prototype.remove = function() {
+        // Remove event listeners on the applicable INPUT elements.
+        for (var x=0; x<this.inputNodes.length; x++) {
+            this.inputNodes[x].removeEventListener("focus", this.setCurrentInputNode, true);
+        }
+        for (var x=0; x<this.keys.length; x++) {
+            this.keys[x].remove();
+        }
     };
 
     Keyboard.prototype.buildRow = function(row) {
@@ -32,8 +50,11 @@ var onScreenKeyboard = (function() {
 
         row.forEach(function(key) {
             key = new Key(key);
-            DOMElement.appendChild(key.render());
-        });
+            DOMElement.appendChild(key.el);
+            // Keep a store of initialized keys, so that we can remove attached
+            // event listeners when we need to.
+            this.keys.push(key);
+        }.bind(this));
 
         return DOMElement;
 
@@ -61,6 +82,9 @@ var onScreenKeyboard = (function() {
 
     };
 
+    /**
+     * Key values can either be a string literal, or have a class of 'object'.
+     */
     var Key = function(key) {
 
         // Only allow keys that are either a string or whose class is object.
@@ -70,7 +94,13 @@ var onScreenKeyboard = (function() {
 
         this.key = key;
 
-        this.render();
+        this.el = this.render();
+
+    };
+
+    Key.prototype.remove = function() {
+
+        this.el.removeEventListener("click", this._onClick, true);
 
     };
 
@@ -83,11 +113,16 @@ var onScreenKeyboard = (function() {
             currentInputValue = currentInputNode.value;
 
         if (typeof this.key === "object") {
+
+            // Must be a registered action.
             switch(this.key.action) {
+
                 case "delete":
                     newInputValue = currentInputValue.substr(0, currentInputValue.length - 1);
                     break;
+
             }
+
         } else {
             newInputValue = currentInputValue + this.key;
         }
@@ -136,8 +171,9 @@ var onScreenKeyboard = (function() {
     return {
         Keyboard: Keyboard,
         Key: Key,
-        // This getter/setter pair shouldn't be called explicitly, but are used
-        // for unit testing.
+        // The below getter/setter pair shouldn't be called explicitly, unless
+        // from within a unit test. currentInputNode should only be set through
+        // the 'focus' event handler.
         _getCurrentInputNode: function() {
             return currentInputNode;
         },
