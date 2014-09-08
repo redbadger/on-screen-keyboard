@@ -24,7 +24,7 @@ var onScreenKeyboard = (function() {
         // Apply 'focus' event listeners upon keyboard initialization.
         this.inputNodes = document.querySelectorAll('input.on-screen-keyboard');
         for(var x=0; x<this.inputNodes.length; x++) {
-            this.inputNodes[x].addEventListener("focus", this._setCurrentInputNode, true);
+            this.inputNodes[x].addEventListener("focus", this._setCurrentInputNode);
         }
 
         // Store a reference to the keys within the keyboard, so that we can
@@ -51,10 +51,10 @@ var onScreenKeyboard = (function() {
     Keyboard.prototype.remove = function() {
         // Remove event listeners on the applicable INPUT elements.
         for (var x=0; x<this.inputNodes.length; x++) {
-            this.inputNodes[x].removeEventListener("focus", this.setCurrentInputNode, true);
+            this.inputNodes[x].removeEventListener("focus", this._setCurrentInputNode);
         }
         for (var y=0; y<this.keys.length; y++) {
-            this.keys[x]._remove();
+            this.keys[y]._remove();
         }
     };
 
