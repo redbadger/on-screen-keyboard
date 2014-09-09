@@ -21,6 +21,8 @@ var onScreenKeyboard = (function() {
             throw new Error("The keyboard needs to have at least one key");
         }
 
+        this._setCurrentInputNode = this._setCurrentInputNode.bind(this);
+
         // Apply 'focus' event listeners upon keyboard initialization.
         this.inputNodes = document.querySelectorAll('input.on-screen-keyboard');
         for(var x=0; x<this.inputNodes.length; x++) {
@@ -31,17 +33,25 @@ var onScreenKeyboard = (function() {
         // call methods on those instances after initialisation - i.e .remove()
         this.keys = [];
 
+        this.renderedKeyboard = this.render();
+
     };
 
     /**
      * Set a reference to the focused DOM INPUT node, and add an event listener
-     * that receives the updated value value.
+     * that will receive the updated .value value.
      */
     Keyboard.prototype._setCurrentInputNode = function(e) {
+
         currentInputNode = e.target;
         currentInputNode.addEventListener("key-pressed", function(e) {
             e.target.value = e.detail;
         });
+
+        // Publish event to the .render() subscriber.
+        var keyboardShownEvent = new CustomEvent("keyboard-shown");
+        this.renderedKeyboard.dispatchEvent(keyboardShownEvent);
+
     };
 
     /**
@@ -49,13 +59,25 @@ var onScreenKeyboard = (function() {
      * including individual associations.
      */
     Keyboard.prototype.remove = function() {
-        // Remove event listeners on the applicable INPUT elements.
+
+        // Remove event listeners on all INPUT elements with the CSS class of
+        // 'on-screen-keyboard'
         for (var x=0; x<this.inputNodes.length; x++) {
             this.inputNodes[x].removeEventListener("focus", this._setCurrentInputNode);
         }
+
+        // Invoke the Key.prototype._key() method to remove all key-based
+        // assets.
         for (var y=0; y<this.keys.length; y++) {
             this.keys[y]._remove();
         }
+
+        // Remove all of the keyboard's custom event listeners
+        this.renderedKeyboard.removeEventListener("keyboard-shown", this._keyboardShown);
+
+        // Remove the #keyboard element.
+        document.body.removeChild(this.renderedKeyboard);
+
     };
 
     /**
@@ -96,6 +118,8 @@ var onScreenKeyboard = (function() {
         var keyboardUI = document.createElement("div");
         keyboardUI.setAttribute("id", "keyboard");
 
+        keyboardUI.addEventListener("keyboard-shown", this._keyboardShown);
+
         // Put all keys into a fragment to prevent superfluous DOM reflows.
         keyboardUI.appendChild(this.buffer);
 
@@ -104,6 +128,10 @@ var onScreenKeyboard = (function() {
 
         return keyboardUI;
 
+    };
+
+    Keyboard.prototype._keyboardShown = function() {
+        this.setAttribute("class", "shown");
     };
 
     /**
@@ -134,9 +162,6 @@ var onScreenKeyboard = (function() {
 
         this.key = key;
 
-        // Since a new function reference is created after .bind() is called,
-        // we need to cache this reference (acting as the 'click' event handler)
-        // so we can refer to it when adding/removing event listeners.
         this._onClick = this._onClick.bind(this);
 
         // Keep a reference to the rendered DOM node in the constructor.
