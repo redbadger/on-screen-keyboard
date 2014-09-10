@@ -246,6 +246,7 @@ var onScreenKeyboard = (function() {
         }
         DOMElement.innerHTML = text;
         DOMElement.setAttribute("id", "key-" + text);
+        DOMElement.setAttribute("class", "key");
 
         // Add a click event listener.
         DOMElement.addEventListener("click", this._onClick);
