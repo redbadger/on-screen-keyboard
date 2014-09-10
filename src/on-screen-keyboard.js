@@ -81,9 +81,6 @@ var onScreenKeyboard = (function() {
         // Remove all of the keyboard's custom event listeners
         this.renderedKeyboard.removeEventListener("keyboard-shown", this._keyboardShown);
 
-        // Remove the #keyboard element.
-        document.body.removeChild(this.renderedKeyboard);
-
     };
 
     /**
@@ -129,10 +126,8 @@ var onScreenKeyboard = (function() {
         // Put all keys into a fragment to prevent superfluous DOM reflows.
         keyboardUI.appendChild(this.buffer);
 
+        // Add the fully-rendered keyboard into the DOM.
         this.afterElement.parentNode.insertBefore(keyboardUI, this.afterElement.nextSibling);
-
-        // Inject the keyboard into the DOM.
-        //document.body.appendChild(keyboardUI);
 
         return keyboardUI;
 
