@@ -12,9 +12,15 @@ var onScreenKeyboard = (function() {
      * @constructor
      * @param {Array} keyRows - An array of arrays that contain individual keys.
      */
-    var Keyboard = function(keyRows) {
+    var Keyboard = function(props) {
 
-        this.keyRows = keyRows;
+        this.keyRows = props.keys;
+
+        if (!props.afterElement) {
+            throw new Error("No element to attach the keyboard to");
+        }
+
+        this.afterElement = document.getElementById(props.afterElement);
 
         // Make sure the keyboard includes at least one key.
         if (typeof this.keyRows === "undefined" || this.keyRows.length === 0) {
@@ -123,8 +129,10 @@ var onScreenKeyboard = (function() {
         // Put all keys into a fragment to prevent superfluous DOM reflows.
         keyboardUI.appendChild(this.buffer);
 
+        this.afterElement.parentNode.insertBefore(keyboardUI, this.afterElement.nextSibling);
+
         // Inject the keyboard into the DOM.
-        document.body.appendChild(keyboardUI);
+        //document.body.appendChild(keyboardUI);
 
         return keyboardUI;
 

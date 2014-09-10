@@ -3,7 +3,10 @@ describe("Keyboard", function() {
     it("throws an error if no keys are provided as an argument of the Keyboard constructor", function() {
 
         assert.throw(function() {
-            new onScreenKeyboard.Keyboard([]);
+            new onScreenKeyboard.Keyboard({
+                afterElement: "mocha",
+                keys: []
+            });
         }, "The keyboard needs to have at least one key");
 
     });
@@ -14,7 +17,10 @@ describe("Keyboard", function() {
         inputField.setAttribute("class", "on-screen-keyboard");
         document.body.appendChild(inputField);
 
-        var keyboard = new onScreenKeyboard.Keyboard([["test"]]);
+        var keyboard = new onScreenKeyboard.Keyboard({
+            afterElement: "mocha",
+            keys: [["test"]]
+        });
         var renderedKeyboard = keyboard.render();
 
         var focusEvent = new Event("focus");

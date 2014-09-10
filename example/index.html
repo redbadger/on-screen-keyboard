@@ -3,15 +3,19 @@
 <body>
     <input type="text" class="on-screen-keyboard">
     <input type="text" class="on-screen-keyboard">
+    <div id="hello"></div>
+    <div id="test"></div>
     <script type="text/javascript" src="../src/on-screen-keyboard.js"></script>
     <script type="text/javascript">
-        var keyboard = new onScreenKeyboard.Keyboard([
-            ["@", {action: "delete", text: "backspace"}, "."],
-            ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-            ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-            ["z", "x", "c", "v", "b", "n", "m"]
-        ]);
-        keyboard.render();
+        var keyboard = new onScreenKeyboard.Keyboard({
+            afterElement: "hello",
+            keys: [
+                ["@", {action: "delete", text: "backspace"}, "."],
+                ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+                ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+                ["z", "x", "c", "v", "b", "n", "m"]
+            ]
+        });
         //keyboard.remove();
     </script>
 </body>

@@ -10,7 +10,10 @@ var keys = [
 describe("Initialization", function() {
 
     beforeEach(function(){
-        keyboard = new onScreenKeyboard.Keyboard([['key']]);
+        keyboard = new onScreenKeyboard.Keyboard({
+            afterElement: "mocha",
+            keys: [['key']]
+        });
     });
 
     it("resides in a variable within the global namespace called onScreenKeyboard", function () {
