@@ -111,11 +111,11 @@ var onScreenKeyboard = (function() {
      */
     Keyboard.prototype.render = function(wrapperElement) {
 
-        this.buffer = document.createDocumentFragment();
+        var buffer = document.createDocumentFragment();
 
         this.keyRows.forEach(function(row) {
             row = this.buildRow(row);
-            this.buffer.appendChild(row);
+            buffer.appendChild(row);
         }.bind(this));
 
         var keyboardUI = document.createElement("div");
@@ -124,7 +124,7 @@ var onScreenKeyboard = (function() {
         keyboardUI.addEventListener("keyboard-shown", this._keyboardShown);
 
         // Put all keys into a fragment to prevent superfluous DOM reflows.
-        keyboardUI.appendChild(this.buffer);
+        keyboardUI.appendChild(buffer);
 
         // Add the fully-rendered keyboard into the DOM.
         this.afterElement.parentNode.insertBefore(keyboardUI, this.afterElement.nextSibling);
