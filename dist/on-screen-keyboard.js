@@ -50,6 +50,9 @@ var onScreenKeyboard = (function() {
     Keyboard.prototype._setCurrentInputNode = function(e) {
 
         currentInputNode = e.target;
+
+        currentInputNode.setAttribute("class", "active");
+
         currentInputNode.addEventListener("key-pressed", function(e) {
             e.target.value = e.detail;
         });
