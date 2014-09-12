@@ -243,7 +243,7 @@ var onScreenKeyboard = (function() {
         var text = this.key;
 
         // Construct the OOM element.
-        var DOMElement = document.createElement("div");
+        var DOMElement = document.createElement("button");
         if (typeof text === "object") {
             text = this.key.text;
         }
