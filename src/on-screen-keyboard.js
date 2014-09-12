@@ -51,7 +51,7 @@ var onScreenKeyboard = (function() {
 
         currentInputNode = e.target;
 
-        currentInputNode.setAttribute("class", "active");
+        currentInputNode.setAttribute("class", currentInputNode.className + " active");
 
         currentInputNode.addEventListener("key-pressed", function(e) {
             e.target.value = e.detail;
